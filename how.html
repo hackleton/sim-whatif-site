@@ -105,6 +105,7 @@
 
   /* ------------------------------------------------------------ ch6 faq -- */
   .ch--faq { background: #0B0E19; }
+  .ch--offer { background: radial-gradient(80% 60% at 85% 30%, #2A2008 0%, #0E0C08 55%, #09080A 100%); }
   .faq { border-top: 1px solid var(--sc-hairline-strong); max-width: 60rem; }
   .faq details { border-bottom: 1px solid var(--sc-hairline-strong); }
   .faq summary {
@@ -123,7 +124,9 @@
   .colophon p.end { font-family: var(--sc-font-display); font-size: clamp(2rem, 1.2rem + 3.4vw, 4.6rem); line-height: 1.08; letter-spacing: -0.02em; max-width: 24ch; margin: 0; }
   .colophon p.end a { text-decoration-thickness: 2px; text-underline-offset: 0.12em; font-style: italic; }
   @media (hover: hover) and (pointer: fine) { .colophon p.end a:hover { text-decoration-thickness: 4px; } }
-  .colophon .back { margin-top: var(--sc-8); display: inline-flex; gap: 0.5em; align-items: center; font: 600 1rem/1 var(--sc-font-text); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 0.3em; }
+  .colophon .end-buy { margin: var(--sc-7) 0 0; }
+  .colophon .end-buy .btn { background: #12070A; color: #F2C863; }
+  .colophon .back { margin-top: var(--sc-7); display: inline-flex; gap: 0.5em; align-items: center; font: 600 1rem/1 var(--sc-font-text); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 0.3em; }
   .colophon .foot { margin-top: var(--sc-9); display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--sc-4); border-top: 1px solid rgb(255 246 241 / 0.3); padding-top: var(--sc-4); font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
   .colophon a:focus-visible, .paper a:focus-visible, .paper summary:focus-visible { outline-color: currentColor; }
 
@@ -147,6 +150,7 @@
   <div class="bar__right">
     <a class="bar__link" href="index.html">The reels</a>
     <a class="bar__link" href="how.html" aria-current="page">How I make them</a>
+    <a class="btn btn--gold bar__buy" href="#skill">Get the skill</a>
     <a class="btn" href="https://www.instagram.com/sim.whatif/" rel="noopener" target="_blank">Follow</a>
   </div>
 </header>
@@ -245,24 +249,62 @@
     </div>
   </section>
 
+  <!-- 06 THE SHORTCUT: the paid, plug-and-play skill -->
+  <section class="ch ch--offer offer" id="skill" data-sc-act="flow" data-chapter="06" data-title="The shortcut">
+    <div class="ch__in">
+      <h2 data-sc-in>You just read the free steps. <em>Here is the shortcut.</em></h2>
+      <div class="offer__grid">
+        <div data-sc-in data-sc-stagger="80">
+          <p class="offer__lede">Knowing the steps is the easy part. Turning them into a pipeline that actually renders a reel is where the time goes: the 3D engine, the voice, the timing, and every fix I learned one video at a time.</p>
+          <p class="offer__lede">The skill is that pipeline in one ZIP. <b>The same one behind 37,30,000 views in 4 days.</b> You skip the building and start at the part that matters: picking the next question.</p>
+          <p class="quickbuy"><a class="btn btn--gold" href="https://payhip.com/b/5jLnv" rel="noopener" target="_blank">Get the skill for $6</a></p>
+          <ol class="install" aria-label="Setup in three steps">
+            <li><span>1</span><code>Buy and download the ZIP</code></li>
+            <li><span>2</span><code>Unzip it into your Claude Code skills folder</code></li>
+            <li><span>3</span><code><b>/simulation</b> what if the Moon vanished</code></li>
+          </ol>
+        </div>
+        <aside class="tag" data-sc-in aria-label="Buy the skill">
+          <span class="tag__stamp" aria-hidden="true">ON SALE</span>
+          <p class="tag__kind">Claude Code skill · ZIP</p>
+          <p class="tag__name">WhatIf Low Poly Video Generator</p>
+          <p class="tag__price"><b>$6</b><span>one payment<br>instant download</span></p>
+          <a class="btn btn--gold" href="https://payhip.com/b/5jLnv" rel="noopener" target="_blank">Get the skill for $6</a>
+          <p class="tag__small">Works inside Claude Code, which needs a paid Claude plan. Sold on Payhip.</p>
+        </aside>
+      </div>
+      <table class="vs" data-sc-in>
+        <thead><tr><th scope="col">Build it from the free steps</th><th scope="col">Start with the skill</th></tr></thead>
+        <tbody>
+          <tr><td>Start from an empty folder</td><td>Start from the setup behind these reels</td></tr>
+          <tr><td>Learn every fix the hard way</td><td>The fixes are already in it</td></tr>
+          <tr><td>Your hours go into setup</td><td>Your hours go into topics</td></tr>
+          <tr><td>Free, plus your time</td><td>$6, once</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <!-- 06 FAQ -->
-  <section class="ch ch--faq" data-sc-act="flow" data-chapter="06" data-title="Questions">
+  <section class="ch ch--faq" data-sc-act="flow" data-chapter="07" data-title="Questions">
     <div class="ch__in">
       <h2 data-sc-in>Questions people <em>ask.</em></h2>
       <div class="faq" data-sc-in>
         <details open><summary>Is it fully AI-made?</summary><p>The AI writes the code, the script draft and the voice. I choose the topics, check the facts, approve the script and decide the final cut.</p></details>
         <details><summary>How long does one video take?</summary><p>It depends on the topic and how many fixes it needs. Most of my time goes into checking and fixing, not waiting.</p></details>
         <details><summary>Are the facts real?</summary><p>Yes. Each video has a source list behind it. If you spot a mistake, comment and I will correct it.</p></details>
-        <details><summary>Can I get your skill or template?</summary><p>Not right now. The steps above are the full method; the settings and rules I built up over many videos are my own recipe.</p></details>
+        <details><summary>Can I get your skill?</summary><p>Yes. The plug-and-play version is on Payhip for $6. Unzip it into Claude Code, type <code>/simulation</code> and your topic. <a href="https://payhip.com/b/5jLnv" rel="noopener" target="_blank">Get the skill</a>.</p></details>
+        <details><summary>What do I need to run it?</summary><p>Claude Code on your computer. Claude Code needs a paid Claude plan.</p></details>
         <details><summary>Do I need to know coding?</summary><p>It helps, but not much. You describe what you want in plain words and the AI writes the code. Knowing a little lets you fix things faster.</p></details>
       </div>
     </div>
   </section>
 
   <!-- COLOPHON -->
-  <section class="colophon" data-sc-act="flow" data-chapter="07" data-title="Follow">
+  <section class="colophon" data-sc-act="flow" data-chapter="08" data-title="Follow">
     <div class="colophon__in" data-sc-in data-sc-stagger="80">
       <p class="end">That is the whole method. The reels live on Instagram, so <a href="https://www.instagram.com/sim.whatif/" rel="noopener" target="_blank">follow Sim.WhatIf</a> and comment the next what&#8209;if.</p>
+      <p class="end-buy"><a class="btn btn--gold" href="https://payhip.com/b/5jLnv" rel="noopener" target="_blank">Get the skill for $6</a></p>
       <a class="back" href="index.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back to the reels</a>
       <div class="foot"><span>Sim.WhatIf · simulations with real facts</span><span>Made with /simulation · 2026</span></div>
     </div>
