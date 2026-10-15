@@ -99,3 +99,4 @@ a { color: inherit; }
 
 .quickbuy { display: none; margin: var(--sc-6) 0 0; }
 @media (max-width: 860px) { .quickbuy { display: block; } }
+.install code i { font-style: normal; color: var(--sc-ink-soft); }
