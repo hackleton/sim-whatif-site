@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How I make them · Sim.WhatIf</title>
+<meta name="description" content="How every Sim.WhatIf reel is made: one line in, research, script, 3D scenes in code, voice and render, with two human checks.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230A0D18'/><text x='16' y='23' font-family='Georgia,serif' font-size='19' font-weight='700' text-anchor='middle' fill='%23E5383F'>?</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap">
+<link rel="preload" href="assets/EBGaramond.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="scrollcraft.css">
+<link rel="stylesheet" href="site.css">
+<style>
+  .bar { grid-template-columns: 1fr auto; }
+  .ch { position: relative; padding: calc(var(--bar-h) + var(--sc-9)) var(--sc-gutter) var(--sc-10); }
+  .ch__in { max-width: 72rem; margin-inline: auto; padding-left: var(--folio-w, 0); }
+  .ch h2 { font-family: var(--sc-font-display); font-weight: 600; font-size: clamp(2.6rem, 1.4rem + 4.6vw, 6rem); line-height: 0.94; letter-spacing: -0.028em; margin: 0 0 var(--sc-7); text-wrap: balance; }
+  .ch h2 em { color: var(--sc-accent); font-style: italic; }
+  .ch p { margin: 0; }
+  .lead { font-family: var(--sc-font-display); font-size: clamp(1.35rem, 1rem + 1.2vw, 2.05rem); line-height: 1.34; max-width: 34ch; text-wrap: pretty; }
+  .body { font-size: var(--sc-t-lg); line-height: 1.62; color: var(--sc-ink-soft); max-width: 58ch; }
+  code { font-family: var(--sc-font-mono); font-size: 0.92em; padding: 0.1em 0.35em; border-radius: 4px; background: rgb(255 255 255 / 0.07); }
+
+  /* paper chapters: hard cut to a light ground, ink and accents re-keyed */
+  .paper { --sc-ink: #17130F; --sc-ink-soft: #5A5048; --sc-accent: #BE1F27; --gold: #9A6A0C; --sc-hairline: rgb(23 19 15 / 0.14); --sc-hairline-strong: rgb(23 19 15 / 0.26); background: #F1EADF; color: var(--sc-ink); }
+  .paper code { background: rgb(23 19 15 / 0.07); }
+
+  /* --------------------------------------------------------------- folio -- */
+  .folio {
+    position: fixed; z-index: 20; left: clamp(1rem, 3vw, 2.25rem); top: 50%; translate: 0 -50%;
+    display: grid; gap: 0.35rem; width: 9rem; pointer-events: none; mix-blend-mode: difference; color: #F3EEE6;
+  }
+  .folio b { font: 600 2.6rem/1 var(--sc-font-display); font-variant-numeric: tabular-nums; }
+  .folio span { font: 500 0.72rem/1.35 var(--sc-font-text); letter-spacing: 0.14em; text-transform: uppercase; }
+  .folio__bar { height: 2px; background: rgb(243 238 230 / 0.25); position: relative; margin-top: 0.4rem; }
+  .folio__bar i { position: absolute; inset: 0; transform-origin: 0 50%; transform: scaleX(0); background: #F3EEE6; }
+  @media (min-width: 1180px) { :root { --folio-w: 7rem; } }
+  @media (max-width: 1179px) { .folio { display: none; } }
+
+  /* ---------------------------------------------------------- title page -- */
+  .title { min-height: 100svh; display: grid; align-content: end; background: radial-gradient(90% 70% at 80% 10%, #1A1530 0%, #0A0D19 60%, #07080F 100%); padding-bottom: var(--sc-9); overflow: clip; }
+  .title__q { position: absolute; right: -4vw; top: 6vh; font: 700 clamp(18rem, 10rem + 30vw, 46rem)/0.8 var(--sc-font-display); color: var(--sc-accent); opacity: 0.12; pointer-events: none; }
+  .title h1 { font-family: var(--sc-font-display); font-weight: 500; font-size: clamp(3rem, 1.4rem + 7vw, 9.5rem); line-height: 0.9; letter-spacing: -0.03em; margin: 0; max-width: 13ch; text-wrap: balance; }
+  .title h1 em { display: block; color: var(--sc-accent); font-weight: 700; font-style: normal; text-transform: uppercase; letter-spacing: -0.02em; }
+  .title .lead { margin-top: var(--sc-7); color: var(--sc-ink-soft); }
+  .byline { margin-top: var(--sc-7); display: flex; gap: var(--sc-5); flex-wrap: wrap; font: 500 var(--sc-t-sm)/1.4 var(--sc-font-text); color: var(--sc-ink-soft); letter-spacing: 0.04em; }
+  .byline a { text-underline-offset: 0.2em; }
+
+  /* ---------------------------------------------------------- ch1 intro -- */
+  .ch--intro { background: #0B0E19; }
+  .intro { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: var(--sc-8); align-items: start; }
+  .intro .body { margin-top: var(--sc-5); }
+  .intro__cmd { margin-top: var(--sc-7); font: 400 clamp(1rem, 0.8rem + 0.8vw, 1.4rem)/1.4 var(--sc-font-mono); padding: 0.9em 1.1em; border-radius: var(--sc-r-md); background: #05060B; box-shadow: var(--sc-e2), inset 0 1px 0 rgb(255 255 255 / 0.06); }
+  .intro__cmd b { color: var(--sc-accent); font-weight: 400; }
+
+  /* ------------------------------------------------------- ch2 pipeline -- */
+  .flow { margin-top: var(--sc-4); }
+  .flow svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .flow .vert { display: none; }
+  @media (max-width: 700px) { .flow .horiz { display: none; } .flow .vert { display: block; max-width: 26rem; margin-inline: auto; } }
+  .flow text { font-family: var(--sc-font-text); }
+  .n-box { fill: #FBF7F0; stroke: #3A322B; stroke-width: 1.25; }
+  .n-dia { fill: #F1EADF; stroke: var(--gold); stroke-width: 2; transition: fill 300ms var(--sc-ease-out); }
+  .n-dia.lit { fill: #F3D99A; }
+  .n-post { stroke: var(--sc-accent); stroke-width: 2; }
+  .n-label { font-size: 14px; fill: #17130F; }
+  .n-strong { font-weight: 600; }
+  .e-line { fill: none; stroke: #6F655B; stroke-width: 1.4; }
+  .e-loop { stroke: var(--gold); stroke-dasharray: none; }
+  .e-label { font-size: 12px; fill: #5A5048; }
+  .node { transition: opacity 260ms var(--sc-ease-out), transform 260ms var(--sc-ease-out); }
+  .flow__note { margin-top: var(--sc-7); max-width: 52ch; font-size: var(--sc-t-lg); line-height: 1.55; color: var(--sc-ink-soft); }
+  .flow__key { margin-top: var(--sc-4); font: 500 var(--sc-t-sm)/1.4 var(--sc-font-text); color: var(--sc-ink-soft); display: flex; gap: var(--sc-5); flex-wrap: wrap; }
+  .flow__key i { display: inline-block; width: 0.85em; height: 0.85em; margin-right: 0.45em; vertical-align: -0.08em; }
+  .k-me { background: #F3D99A; outline: 2px solid var(--gold); rotate: 45deg; }
+  .k-ai { background: #FBF7F0; outline: 1.25px solid #3A322B; border-radius: 2px; }
+
+  /* ---------------------------------------------------------- ch3 steps -- */
+  .ch--steps { background: #10131C; }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--sc-8); }
+  .steps li { display: grid; grid-template-columns: 4.2rem 1fr; gap: var(--sc-4); padding: var(--sc-6) 0; border-top: 1px solid var(--sc-hairline); }
+  .steps li > b { font: 700 3.2rem/0.9 var(--sc-font-display); color: var(--sc-accent); font-variant-numeric: lining-nums; }
+  .steps h3 { margin: 0.15rem 0 var(--sc-2); font-family: var(--sc-font-display); font-weight: 600; font-size: var(--sc-t-xl); line-height: 1.15; }
+  .steps p { color: var(--sc-ink-soft); line-height: 1.6; }
+  .steps li.me > b { color: var(--gold); }
+  .steps li.me h3::after { content: "my check"; margin-left: 0.6em; padding: 0.2em 0.5em; vertical-align: 0.3em; font: 600 0.62rem/1 var(--sc-font-text); letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); border: 1.5px solid var(--gold); border-radius: 3px; }
+
+  /* ---------------------------------------------------------- ch4 stack -- */
+  .ch--stack { background: #14100C; }
+  .stack-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: var(--sc-8); align-items: end; }
+  .stack-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--sc-hairline-strong); }
+  .stack-list li { display: grid; grid-template-columns: 8rem 1fr; gap: var(--sc-4); padding: var(--sc-5) 0; border-bottom: 1px solid var(--sc-hairline); font-size: var(--sc-t-lg); }
+  .stack-list span { font: 500 var(--sc-t-xs)/2 var(--sc-font-text); letter-spacing: 0.14em; text-transform: uppercase; color: var(--sc-ink-soft); }
+  .stack-list a { text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+  .big-note { font-family: var(--sc-font-display); font-style: italic; font-size: clamp(1.6rem, 1rem + 2vw, 2.8rem); line-height: 1.15; max-width: 16ch; }
+  .big-note b { color: var(--sc-accent); font-weight: 600; }
+
+  /* ----------------------------------------------------------- ch5 tips -- */
+  .tips { list-style: none; margin: 0; padding: 0; counter-reset: tip; }
+  .tips li { display: grid; grid-template-columns: minmax(14rem, 0.9fr) 1.1fr; gap: var(--sc-7); padding: var(--sc-6) 0; border-top: 1px solid var(--sc-hairline-strong); }
+  .tips h3 { margin: 0; font-family: var(--sc-font-display); font-weight: 600; font-size: var(--sc-t-2xl); line-height: 1.05; letter-spacing: -0.015em; }
+  .tips p { font-size: var(--sc-t-lg); line-height: 1.55; color: var(--sc-ink-soft); max-width: 46ch; }
+
+  /* ------------------------------------------------------------ ch6 faq -- */
+  .ch--faq { background: #0B0E19; }
+  .faq { border-top: 1px solid var(--sc-hairline-strong); max-width: 60rem; }
+  .faq details { border-bottom: 1px solid var(--sc-hairline-strong); }
+  .faq summary {
+    list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: var(--sc-5);
+    padding: var(--sc-5) 0; font-family: var(--sc-font-display); font-weight: 600; font-size: var(--sc-t-xl); line-height: 1.2;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; flex: none; font: 400 1.8rem/1 var(--sc-font-text); color: var(--sc-accent); transition: rotate 200ms var(--sc-ease-out); }
+  .faq details[open] summary::after { rotate: 45deg; }
+  .faq details p { padding: 0 0 var(--sc-6); max-width: 58ch; font-size: var(--sc-t-lg); line-height: 1.6; color: var(--sc-ink-soft); }
+  @media (hover: hover) and (pointer: fine) { .faq summary:hover { color: var(--sc-accent); } }
+
+  /* -------------------------------------------------------------- colophon -- */
+  .colophon { --sc-ink: #FFF6F1; --sc-ink-soft: #FFE1DA; color: var(--sc-ink); background: #B3161F; padding: calc(var(--bar-h) + var(--sc-9)) var(--sc-gutter) var(--sc-6); }
+  .colophon__in { max-width: 72rem; margin-inline: auto; padding-left: var(--folio-w, 0); }
+  .colophon p.end { font-family: var(--sc-font-display); font-size: clamp(2rem, 1.2rem + 3.4vw, 4.6rem); line-height: 1.08; letter-spacing: -0.02em; max-width: 24ch; margin: 0; }
+  .colophon p.end a { text-decoration-thickness: 2px; text-underline-offset: 0.12em; font-style: italic; }
+  @media (hover: hover) and (pointer: fine) { .colophon p.end a:hover { text-decoration-thickness: 4px; } }
+  .colophon .back { margin-top: var(--sc-8); display: inline-flex; gap: 0.5em; align-items: center; font: 600 1rem/1 var(--sc-font-text); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 0.3em; }
+  .colophon .foot { margin-top: var(--sc-9); display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--sc-4); border-top: 1px solid rgb(255 246 241 / 0.3); padding-top: var(--sc-4); font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
+  .colophon a:focus-visible, .paper a:focus-visible, .paper summary:focus-visible { outline-color: currentColor; }
+
+  @media (max-width: 860px) {
+    .intro, .stack-grid { grid-template-columns: 1fr; gap: var(--sc-6); }
+    .steps { grid-template-columns: 1fr; }
+    .tips li { grid-template-columns: 1fr; gap: var(--sc-3); }
+    .ch { padding-top: calc(var(--bar-h) + var(--sc-8)); padding-bottom: var(--sc-9); }
+    .stack-list li { grid-template-columns: 6.2rem 1fr; }
+    .steps li { grid-template-columns: 3.2rem 1fr; }
+    .steps li > b { font-size: 2.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sc-grain" aria-hidden="true"></div>
+
+<header class="bar">
+  <a class="bar__mark" href="index.html" aria-label="Sim.WhatIf home">Sim<i>.</i>WhatIf</a>
+  <div class="bar__right">
+    <a class="bar__link" href="index.html">The reels</a>
+    <a class="bar__link" href="how.html" aria-current="page">How I make them</a>
+    <a class="btn" href="https://www.instagram.com/sim.whatif/" rel="noopener" target="_blank">Follow</a>
+  </div>
+</header>
+
+<aside class="folio" aria-hidden="true"><b id="folioNum">00</b><span id="folioTitle">Title</span><span class="folio__bar"><i id="folioBar"></i></span></aside>
+
+<main>
+
+  <!-- TITLE PAGE: type only -->
+  <section class="ch title" data-sc-act="flow" data-chapter="00" data-title="Behind the reels">
+    <span class="title__q" aria-hidden="true">?</span>
+    <div class="ch__in" data-sc-in data-sc-stagger="90">
+      <h1>How I make my <em>what-if</em> simulation videos</h1>
+      <p class="lead">Every what-if reel on my page starts as one line, like “what if the Moon vanished”, and ends as a finished vertical video with voice, captions and 3D scenes.</p>
+      <p class="byline"><span>Sim.WhatIf</span><span>15 Oct 2026</span><a href="index.html">See the reels</a></p>
+    </div>
+  </section>
+
+  <!-- 01 WHAT THIS IS -->
+  <section class="ch ch--intro" data-sc-act="flow" data-chapter="01" data-title="What this is">
+    <div class="ch__in intro">
+      <div data-sc-in data-sc-stagger="80">
+        <h2>What this <em>is.</em></h2>
+        <p class="lead">I built a custom AI workflow that I call with one command, <code>/simulation</code>, followed by the topic.</p>
+        <p class="body">The AI does the heavy lifting: research, script, animation code, voice and rendering. My job is to pick the topic, check the facts and the script, and decide what goes out. This page shows the steps so you can see how it works.</p>
+      </div>
+      <div data-sc-in>
+        <p class="intro__cmd"><b>/simulation</b> what if every mosquito vanished</p>
+        <p class="body" style="margin-top: var(--sc-4)">That one line is the whole input.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 THE BIG PICTURE: the pipeline draws itself -->
+  <section class="ch paper" id="flowCh" data-sc-act="flow" data-chapter="02" data-title="The big picture">
+    <div class="ch__in">
+      <h2 data-sc-in>Two checks by me. <em>The AI does the rest.</em></h2>
+      <figure class="flow" role="img" aria-label="The simulation flow: type the topic, research facts, write the script, my script check, pick the opening, build 3D scenes, voice and sound, my preview check, render video, caption and post. A failed check loops back.">
+        <svg class="horiz" viewBox="0 0 760 450" id="flowH"></svg>
+        <svg class="vert" viewBox="0 0 360 850" id="flowV"></svg>
+      </figure>
+      <p class="flow__key" aria-hidden="true"><span><i class="k-me"></i>My decision</span><span><i class="k-ai"></i>Done by the AI (I also pick the opening and post)</span></p>
+      <p class="flow__note">The AI never builds a scene before I approve the script, and nothing renders until I like the preview.</p>
+    </div>
+  </section>
+
+  <!-- 03 STEP BY STEP -->
+  <section class="ch ch--steps" data-sc-act="flow" data-chapter="03" data-title="Step by step">
+    <div class="ch__in">
+      <h2 data-sc-in>Step by <em>step.</em></h2>
+      <ol class="steps" data-sc-in data-sc-stagger="45">
+        <li><b>1</b><div><h3>Pick the topic</h3><p>I type <code>/simulation</code> and the question, for example <code>/simulation what if every mosquito vanished</code>. That one line is the whole input.</p></div></li>
+        <li><b>2</b><div><h3>Research</h3><p>The AI searches the web for real facts, numbers and studies on the topic. Every claim in the video gets a source, so nothing is made up.</p></div></li>
+        <li><b>3</b><div><h3>Write the script</h3><p>It splits the story into 4 to 6 short stages, each with one strong fact. It writes the voiceover, the on-screen captions and a beat plan for what you see in each moment. Most reels land between 45 and 90 seconds.</p></div></li>
+        <li class="me"><b>4</b><div><h3>I check the script</h3><p>I read it, fix the facts or the tone, and approve it. Nothing is built until I say yes.</p></div></li>
+        <li><b>5</b><div><h3>Choose the opening</h3><p>The AI suggests a few ideas for the first two seconds. I pick the one that would make me stop scrolling.</p></div></li>
+        <li><b>6</b><div><h3>Build the 3D scenes</h3><p>The AI writes code that draws a low-poly 3D world for each stage, with a camera that moves, on-screen counters and captions. It reuses pieces from my earlier videos, so each new one is faster.</p></div></li>
+        <li><b>7</b><div><h3>Add voice and sound</h3><p>An AI voice reads the script. Background sound and effects are timed to each scene.</p></div></li>
+        <li class="me"><b>8</b><div><h3>Preview and fix</h3><p>I watch the video in a live preview and ask for changes in plain words, like “slow this part down” or “make the caption bigger”.</p></div></li>
+        <li><b>9</b><div><h3>Render</h3><p>The final 1080 × 1920 vertical video is exported, the volume is levelled for Instagram, and a cover image is made.</p></div></li>
+        <li><b>10</b><div><h3>Post</h3><p>The AI also drafts a caption and hashtags. I edit those and post.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 04 TECH STACK -->
+  <section class="ch ch--stack" data-sc-act="flow" data-chapter="04" data-title="Tech stack">
+    <div class="ch__in">
+      <h2 data-sc-in>Tech <em>stack.</em></h2>
+      <div class="stack-grid">
+        <p class="big-note" data-sc-in>No video editor. No paid 3D software. <b>Almost everything is drawn by code.</b></p>
+        <ul class="stack-list" data-sc-in data-sc-stagger="50">
+          <li><span>AI agent</span><b><a href="https://claude.com/claude-code" rel="noopener" target="_blank">Claude Code</a>, with a custom skill I wrote</b></li>
+          <li><span>3D</span><b><a href="https://threejs.org" rel="noopener" target="_blank">Three.js</a></b></li>
+          <li><span>Animation</span><b><a href="https://gsap.com" rel="noopener" target="_blank">GSAP</a></b></li>
+          <li><span>Video</span><b>An HTML-to-video renderer</b></li>
+          <li><span>Voice</span><b>AI text-to-speech</b></li>
+          <li><span>Research</span><b>Web search, checked by me</b></li>
+        </ul>
+      </div>
+      <p class="body" style="margin-top: var(--sc-6)">A few videos add free public-domain images or 3D models.</p>
+    </div>
+  </section>
+
+  <!-- 05 TRY IT -->
+  <section class="ch paper" data-sc-act="flow" data-chapter="05" data-title="Try it yourself">
+    <div class="ch__in">
+      <h2 data-sc-in>Want to try it <em>yourself?</em></h2>
+      <ul class="tips" data-sc-in data-sc-stagger="60">
+        <li><h3>Start with one small video.</h3><p>Ask an AI coding assistant to make a 20-second 3D scene in a web page, then learn to export it as video.</p></li>
+        <li><h3>Fact-check everything.</h3><p>AI can sound sure and still be wrong. Open the sources and read them yourself.</p></li>
+        <li><h3>Turn every fix into a rule.</h3><p>Each time I correct something, I write it down so the AI never makes that mistake again. Your own list of rules is what makes your style yours.</p></li>
+        <li><h3>Keep a human check.</h3><p>Check before building and before posting. The AI is fast, but the taste and the final call should be yours.</p></li>
+        <li><h3>Reuse your parts.</h3><p>Save the scenes, characters and sounds you make. Each video gets faster than the last.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 06 FAQ -->
+  <section class="ch ch--faq" data-sc-act="flow" data-chapter="06" data-title="Questions">
+    <div class="ch__in">
+      <h2 data-sc-in>Questions people <em>ask.</em></h2>
+      <div class="faq" data-sc-in>
+        <details open><summary>Is it fully AI-made?</summary><p>The AI writes the code, the script draft and the voice. I choose the topics, check the facts, approve the script and decide the final cut.</p></details>
+        <details><summary>How long does one video take?</summary><p>It depends on the topic and how many fixes it needs. Most of my time goes into checking and fixing, not waiting.</p></details>
+        <details><summary>Are the facts real?</summary><p>Yes. Each video has a source list behind it. If you spot a mistake, comment and I will correct it.</p></details>
+        <details><summary>Can I get your skill or template?</summary><p>Not right now. The steps above are the full method; the settings and rules I built up over many videos are my own recipe.</p></details>
+        <details><summary>Do I need to know coding?</summary><p>It helps, but not much. You describe what you want in plain words and the AI writes the code. Knowing a little lets you fix things faster.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLOPHON -->
+  <section class="colophon" data-sc-act="flow" data-chapter="07" data-title="Follow">
+    <div class="colophon__in" data-sc-in data-sc-stagger="80">
+      <p class="end">That is the whole method. The reels live on Instagram, so <a href="https://www.instagram.com/sim.whatif/" rel="noopener" target="_blank">follow Sim.WhatIf</a> and comment the next what&#8209;if.</p>
+      <a class="back" href="index.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back to the reels</a>
+      <div class="foot"><span>Sim.WhatIf · simulations with real facts</span><span>Made with /simulation · 2026</span></div>
+    </div>
+  </section>
+
+</main>
+
+<script src="scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+(function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS = 'http://www.w3.org/2000/svg';
+  var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+
+  // ---- the pipeline, in two layouts. Order = the order it draws in.
+  var LABELS = ['Type the topic', 'Research facts', 'Write the script', 'Script OK?', 'Pick the opening', 'Build 3D scenes', 'Voice and sound', 'Preview OK?', 'Render video', 'Caption and post'];
+  var KIND = ['box', 'box', 'box', 'dia', 'box', 'box', 'box', 'dia', 'box', 'post'];
+  var H = {
+    W: 144, H: 48, dw: 70, dh: 38,
+    pos: [[100,124],[270,124],[440,124],[620,124],[620,270],[440,270],[270,270],[100,270],[100,400],[270,400]],
+    edges: [
+      { d: 'M172 124H198', after: 0 }, { d: 'M342 124H368', after: 1 }, { d: 'M512 124H550', after: 2 },
+      { d: 'M620 86V58H440V100', after: 3, loop: true, label: ['no: revise it', 530, 50] },
+      { d: 'M620 162V246', after: 3, label: ['yes', 632, 210] },
+      { d: 'M548 270H512', after: 4 }, { d: 'M368 270H342', after: 5 }, { d: 'M198 270H170', after: 6 },
+      { d: 'M100 232V200H440V246', after: 7, loop: true, label: ['changes needed', 270, 192] },
+      { d: 'M100 308V376', after: 7, label: ['looks right', 112, 346] },
+      { d: 'M172 400H198', after: 8 }
+    ]
+  };
+  var V = {
+    W: 200, H: 48, dw: 84, dh: 40,
+    pos: [[190,40],[190,120],[190,200],[190,290],[190,385],[190,465],[190,545],[190,635],[190,730],[190,810]],
+    edges: [
+      { d: 'M190 64V96', after: 0 }, { d: 'M190 144V176', after: 1 }, { d: 'M190 224V250', after: 2 },
+      { d: 'M106 290H46V200H90', after: 3, loop: true, label: ['no', 52, 252] },
+      { d: 'M190 330V361', after: 3, label: ['yes', 200, 350] },
+      { d: 'M190 409V441', after: 4 }, { d: 'M190 489V521', after: 5 }, { d: 'M190 569V595', after: 6 },
+      { d: 'M106 635H46V465H90', after: 7, loop: true, label: ['fix', 52, 560] },
+      { d: 'M190 675V706', after: 7, label: ['yes', 200, 694] },
+      { d: 'M190 754V786', after: 8 }
+    ]
+  };
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function build(svg, L, id) {
+    var defs = el('defs', {}, svg);
+    var m = el('marker', { id: id + '-arrow', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 6, markerHeight: 6, orient: 'auto-start-reverse' }, defs);
+    el('path', { d: 'M0 0L10 5L0 10z', fill: '#6F655B' }, m);
+    var mg = el('marker', { id: id + '-gold', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 6, markerHeight: 6, orient: 'auto-start-reverse' }, defs);
+    el('path', { d: 'M0 0L10 5L0 10z', fill: '#9A6A0C' }, mg);
+    var out = { edges: [], nodes: [], dias: [] };
+    L.edges.forEach(function (e) {
+      var g = el('g', {}, svg);
+      var p = el('path', { d: e.d, 'class': 'e-line' + (e.loop ? ' e-loop' : ''), pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': reduce ? 0 : 1, 'marker-end': 'url(#' + id + (e.loop ? '-gold' : '-arrow') + ')' }, g);
+      var t = null;
+      if (e.label) { t = el('text', { x: e.label[1], y: e.label[2], 'class': 'e-label', 'text-anchor': e.label[1] > 600 || e.label[1] < 120 || (id === 'v' && e.label[1] === 200) ? 'start' : 'middle' }, g); t.textContent = e.label[0]; }
+      out.edges.push({ p: p, t: t, after: e.after, loop: !!e.loop });
+    });
+    L.pos.forEach(function (c, i) {
+      var g = el('g', { 'class': 'node' }, svg), x = c[0], y = c[1], shape;
+      if (KIND[i] === 'dia') {
+        shape = el('polygon', { points: (x - L.dw) + ',' + y + ' ' + x + ',' + (y - L.dh) + ' ' + (x + L.dw) + ',' + y + ' ' + x + ',' + (y + L.dh), 'class': 'n-dia' }, g);
+        out.dias.push({ el: shape, i: i });
+      } else {
+        el('rect', { x: x - L.W / 2, y: y - L.H / 2, width: L.W, height: L.H, rx: 8, 'class': 'n-box' + (KIND[i] === 'post' ? ' n-post' : '') }, g);
+      }
+      var t = el('text', { x: x, y: y + 5, 'text-anchor': 'middle', 'class': 'n-label' + (KIND[i] !== 'box' ? ' n-strong' : '') }, g);
+      t.textContent = LABELS[i];
+      out.nodes.push(g);
+    });
+    return out;
+  }
+  var parts = [build(document.getElementById('flowH'), H, 'h'), build(document.getElementById('flowV'), V, 'v')];
+  var flowCh = document.getElementById('flowCh');
+
+  // ---- folio: chapter number, title, progress through the page
+  var chapters = Array.prototype.slice.call(document.querySelectorAll('[data-chapter]'));
+  var fNum = document.getElementById('folioNum'), fTitle = document.getElementById('folioTitle'), fBar = document.getElementById('folioBar');
+  var lastCh = null;
+
+  function frame() {
+    var vh = innerHeight, y = scrollY;
+    var mid = y + vh * 0.4, cur = chapters[0];
+    for (var i = 0; i < chapters.length; i++) { if (chapters[i].offsetTop <= mid) cur = chapters[i]; }
+    if (cur !== lastCh) { fNum.textContent = cur.dataset.chapter; fTitle.textContent = cur.dataset.title; lastCh = cur; }
+    fBar.style.transform = 'scaleX(' + clamp(y / (document.documentElement.scrollHeight - vh)).toFixed(4) + ')';
+
+    // draw the flow: 0 when the chapter top is at 70% of the screen, 1 a little before it leaves
+    var r = flowCh.getBoundingClientRect();
+    var k = reduce ? 1 : clamp((vh * 0.7 - r.top) / (r.height * 0.62));
+    var t = k * 10.4;
+    parts.forEach(function (P) {
+      P.nodes.forEach(function (g, i) {
+        var a = clamp((t - i) * 2.2);
+        g.style.opacity = a.toFixed(3);
+        g.style.transform = 'translateY(' + ((1 - a) * 6).toFixed(2) + 'px)';
+      });
+      P.edges.forEach(function (e) {
+        var a = clamp((t - e.after - (e.loop ? 0.45 : 0.4)) * (e.loop ? 1.6 : 2.4));
+        e.p.setAttribute('stroke-dashoffset', (1 - a).toFixed(3));
+        if (e.t) e.t.style.opacity = a > 0.6 ? 1 : 0;
+      });
+      P.dias.forEach(function (d) { d.el.classList.toggle('lit', t > d.i + 0.5); });
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
