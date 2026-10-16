@@ -79,6 +79,18 @@
   .hero h1 .l1 { display: block; font-size: clamp(2.6rem, 1.6rem + 4vw, 5.6rem); }
   .hero h1 .l2 { display: block; font-size: clamp(3.6rem, 1.4rem + 9.4vw, 11.5rem); font-weight: 700; color: var(--sc-accent); text-transform: uppercase; margin: 0.04em 0 0.06em -0.04em; letter-spacing: -0.03em; text-shadow: 0 10px 40px rgb(7 8 15 / 0.65); }
   .hero h1 .l3 { display: block; font-size: clamp(2rem, 1.3rem + 2.6vw, 3.9rem); font-style: italic; }
+  .proof {
+    display: inline-grid; justify-items: start; gap: 0.2em; margin: var(--sc-7) 0 0;
+    padding: 0.55em 1.15em 0.65em; border: 3px solid var(--gold); border-radius: 4px; color: var(--gold);
+    background: rgb(20 15 4 / 0.72); rotate: -3deg; transform-origin: 0 50%;
+    box-shadow: 0 10px 28px -10px rgb(0 0 0 / 0.7), inset 0 1px 0 rgb(233 185 78 / 0.18);
+    animation: slam 700ms 450ms both var(--sc-ease-out);
+  }
+  .proof small { font: 600 0.72rem/1 var(--sc-font-text); letter-spacing: 0.32em; }
+  .proof strong { font-family: var(--sc-font-display); font-weight: 700; font-size: clamp(1.7rem, 1rem + 2.2vw, 3rem); line-height: 1; letter-spacing: 0.01em; }
+  .proof em { font: 500 var(--sc-t-sm)/1.3 var(--sc-font-text); font-style: normal; color: #F2D592; letter-spacing: 0.02em; }
+  @keyframes slam { 0% { opacity: 0; transform: scale(1.5); } 55% { opacity: 1; transform: scale(0.96); } 100% { opacity: 1; transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .proof { animation: none; } }
   .hero__sub { margin: var(--sc-6) 0 var(--sc-6); font-size: var(--sc-t-lg); line-height: 1.5; color: var(--sc-ink-soft); max-width: 34ch; }
   .hero__ctas { display: flex; flex-wrap: wrap; gap: var(--sc-3); }
   .hero__stage { position: relative; justify-self: center; display: grid; place-items: center; }
@@ -288,7 +300,8 @@
     <div class="hero__grid">
       <div class="hero__copy hero__layer" id="heroCopy">
         <h1><span class="l1">What if</span><span class="l2" id="heroWord">anything</span><span class="l3">could be simulated?</span></h1>
-        <p class="hero__sub">Low-poly 3D reels that answer one impossible question each. Real facts, built in code, 17 million views in 4 days.</p>
+        <p class="proof"><small>RESULT</small><strong>17 MILLION VIEWS</strong><em>in 4 days · @sim.whatif + @simulif.world</em></p>
+        <p class="hero__sub">Low-poly 3D reels that answer one impossible question each. Real facts, built in code.</p>
         <div class="hero__ctas">
           <a class="btn" href="https://www.instagram.com/sim.whatif/" rel="noopener" target="_blank">Follow</a>
           <a class="btn btn--ghost" href="how.html">How I make them <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
