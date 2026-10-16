@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Sim.WhatIf · What if anything could be simulated?</title>
-<meta name="description" content="Low-poly 3D what-if reels built in code. 37.3 lakh views in 4 days. Here is how they are made.">
+<meta name="description" content="Low-poly 3D what-if reels built in code. 17 million views in 4 days across two Instagram pages. Here is how they are made.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230A0D18'/><text x='16' y='23' font-family='Georgia,serif' font-size='19' font-weight='700' text-anchor='middle' fill='%23E5383F'>?</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,6 +33,7 @@
   }
   .bar__tally b { display: block; color: var(--gold); font: 600 1rem/1.1 var(--sc-font-text); font-variant-numeric: tabular-nums; }
   .bar.has-tally .bar__tally { opacity: 1; }
+  @media (max-width: 1599px) { .bar__tally { display: none; } }
 
   /* ---------------------------------------------------------------- shared -- */
   .cut { position: relative; min-height: 100svh; display: grid; align-items: center; overflow: clip; }
@@ -203,9 +204,24 @@
   .close .btn { background: #12070A; color: #FFF6F1; font-size: 1.15rem; padding: 1em 1.6em; }
   @media (hover: hover) and (pointer: fine) { .close .btn:hover { background: #2A0E13; } }
   .close .btn--ghost { background: transparent; border-color: rgb(255 246 241 / 0.6); }
+  .close .btn--gold { background: var(--gold); color: #16110A; }
+  @media (hover: hover) and (pointer: fine) { .close .btn--gold:hover { background: #F2C863; } }
   @media (hover: hover) and (pointer: fine) { .close .btn--ghost:hover { background: rgb(255 246 241 / 0.1); } }
   .close .btn:focus-visible { outline-color: #FFF6F1; }
-  .close__ctas { display: flex; flex-wrap: wrap; gap: var(--sc-3); }
+  .close__ctas { display: flex; flex-wrap: wrap; gap: var(--sc-3); margin-top: var(--sc-5); }
+  .pages { display: grid; grid-template-columns: repeat(2, minmax(0, 22rem)); gap: var(--sc-4); }
+  .page {
+    display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: var(--sc-4); align-items: center;
+    padding: var(--sc-5) var(--sc-5); border-radius: var(--sc-r-md); background: #12070A; color: #FFF6F1; text-decoration: none;
+    box-shadow: var(--sc-e2), inset 0 1px 0 rgb(255 246 241 / 0.08); transition: transform 160ms var(--sc-ease-out), background-color 160ms var(--sc-ease-out);
+  }
+  .page svg { grid-row: 1 / 3; width: 2.2rem; height: 2.2rem; }
+  .page__h { font-family: var(--sc-font-display); font-weight: 600; font-size: var(--sc-t-xl); line-height: 1.1; }
+  .page__s { font: 500 var(--sc-t-sm)/1.3 var(--sc-font-text); color: #FFD9D2; }
+  .page:active { transform: translateY(1px) scale(0.99); }
+  .page:focus-visible { outline-color: #FFF6F1; }
+  @media (hover: hover) and (pointer: fine) { .page:hover { background: #2A0E13; transform: translateY(-2px); } }
+  @media (max-width: 620px) { .pages { grid-template-columns: 1fr; } }
   .foot { position: relative; width: 100%; max-width: 86rem; margin: var(--sc-10) auto 0; display: flex; justify-content: space-between; gap: var(--sc-4); flex-wrap: wrap; font-size: var(--sc-t-sm); color: var(--sc-ink-soft); border-top: 1px solid rgb(255 246 241 / 0.3); padding-top: var(--sc-4); }
 
   /* --------------------------------------------------------------- phones -- */
@@ -245,7 +261,7 @@
   <a class="bar__mark" href="#top" aria-label="Sim.WhatIf, back to top">Sim<i>.</i>WhatIf</a>
   <p class="bar__q" aria-hidden="true">What if&nbsp;<span id="barPre"></span><span class="bar__slot"><span class="bar__word" id="barWord">anything</span></span><span id="barTail">?</span></p>
   <div class="bar__right">
-    <p class="bar__tally" id="tally" aria-hidden="true"><b>37,30,000</b>views in 4 days</p>
+    <p class="bar__tally" id="tally" aria-hidden="true"><b>17,000,000</b>views in 4 days</p>
     <a class="bar__link" href="how.html">How I make them</a>
     <a class="btn btn--gold bar__buy" href="#skill">Get the skill</a>
     <a class="btn" href="https://www.instagram.com/sim.whatif/" rel="noopener" target="_blank">Follow</a>
@@ -259,8 +275,8 @@
   <div class="take__body" id="takeBody">
     <p class="take__q" id="takeQ">What if <em>one person</em> made all of these?</p>
     <p class="take__num" id="takeNum">0</p>
-    <p class="take__lbl" id="takeLbl">views in 4 days</p>
-    <div class="stampwrap"><span class="ring" id="ring"></span><div class="stamp" id="stamp"><small>RESULT</small><strong>37.3 LAKH VIEWS</strong></div></div>
+    <p class="take__lbl" id="takeLbl">views in 4 days, across @sim.whatif and @simulif.world</p>
+    <div class="stampwrap"><span class="ring" id="ring"></span><div class="stamp" id="stamp"><small>RESULT</small><strong>17 MILLION VIEWS</strong></div></div>
   </div>
 </div>
 
@@ -272,7 +288,7 @@
     <div class="hero__grid">
       <div class="hero__copy hero__layer" id="heroCopy">
         <h1><span class="l1">What if</span><span class="l2" id="heroWord">anything</span><span class="l3">could be simulated?</span></h1>
-        <p class="hero__sub">Low-poly 3D reels that answer one impossible question each. Real facts, built in code, millions of views.</p>
+        <p class="hero__sub">Low-poly 3D reels that answer one impossible question each. Real facts, built in code, 17 million views in 4 days.</p>
         <div class="hero__ctas">
           <a class="btn" href="https://www.instagram.com/sim.whatif/" rel="noopener" target="_blank">Follow</a>
           <a class="btn btn--ghost" href="how.html">How I make them <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -361,7 +377,7 @@
       </div>
     </section>
   </div>
-  <p class="sr-only">37,30,000 views in 4 days.</p>
+  <p class="sr-only">17,000,000 views in 4 days, across @sim.whatif and @simulif.world.</p>
 
   <!-- HOW: one teaser cut, the full method lives on its own page -->
   <section class="how" data-sc-act="flow" data-pre="it took " data-word="one line" data-tail="?">
@@ -413,16 +429,16 @@
     <span class="close__q" aria-hidden="true">?</span>
     <div class="close__in" data-sc-in data-sc-stagger="70">
       <h2>Pick the next <i>what if.</i></h2>
-      <p>Follow, then comment the question you want simulated.</p>
+      <p>Two pages. 17 million views in 4 days. Follow both, then comment the question you want simulated.</p>
+      <div class="pages">
+        <a class="page" href="https://www.instagram.com/sim.whatif/" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span class="page__h">@sim.whatif</span><span class="page__s">Follow on Instagram</span></a>
+        <a class="page" href="https://www.instagram.com/simulif.world/" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span class="page__h">@simulif.world</span><span class="page__s">Follow on Instagram</span></a>
+      </div>
       <div class="close__ctas">
-        <a class="btn" href="https://www.instagram.com/sim.whatif/" rel="noopener" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-          Follow
-        </a>
         <a class="btn btn--gold" href="https://payhip.com/b/5jLnv" rel="noopener" target="_blank">Get the skill for $6</a>
       </div>
     </div>
-    <footer class="foot"><span>Sim.WhatIf · simulations with real facts</span><span>Made with /simulation · 2026</span></footer>
+    <footer class="foot"><span>@sim.whatif · @simulif.world · simulations with real facts</span><span>Made with /simulation · 2026</span></footer>
   </section>
 
 </main>
@@ -441,11 +457,11 @@
   var sections = Array.prototype.slice.call(document.querySelectorAll('[data-word]')).sort(function (a, b) { return a.offsetTop - b.offsetTop; });
   var rows = Array.prototype.slice.call(document.querySelectorAll('.wall__row'));
   var decks = Array.prototype.slice.call(document.querySelectorAll('.deck'));
-  var TOTAL = 3730000;
+  var TOTAL = 17000000;
   var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
   var seg = function (q, a, b) { return clamp((q - a) / (b - a)); };
   var easeOut = function (t) { return 1 - Math.pow(1 - t, 3); };
-  var fmt = new Intl.NumberFormat('en-IN');
+  var fmt = new Intl.NumberFormat('en-US');
 
   // ---- loops: play only what is on screen; posters only under reduced motion
   var vids = Array.prototype.slice.call(document.querySelectorAll('video.loop'));
