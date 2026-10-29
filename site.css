@@ -100,3 +100,6 @@ a { color: inherit; }
 .quickbuy { display: none; margin: var(--sc-6) 0 0; }
 @media (max-width: 860px) { .quickbuy { display: block; } }
 .install code i { font-style: normal; color: var(--sc-ink-soft); }
+.tag__next { margin: var(--sc-4) 0 0; padding: var(--sc-3) var(--sc-4); border-radius: var(--sc-r-sm); background: rgb(233 185 78 / 0.08); border: 1px dashed rgb(233 185 78 / 0.35); font: 500 var(--sc-t-sm)/1.45 var(--sc-font-text); color: var(--sc-ink-soft); }
+.tag__next span { font-weight: 600; letter-spacing: 0.16em; color: var(--gold); }
+.tag__next b { font-weight: 700; color: var(--sc-ink); }
